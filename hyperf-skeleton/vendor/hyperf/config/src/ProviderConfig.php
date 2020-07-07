@@ -34,6 +34,18 @@ class ProviderConfig
     public static function load(): array
     {
         if (! static::$providerConfigs) {
+            //读取composer.json 配置里的 以hyperf/logger组件为例
+            /*
+              "extra": {
+                 "branch-alias": {
+                  "dev-master": "2.0-dev"
+              },
+              "hyperf": {
+                 "config": "Hyperf\\Logger\\ConfigProvider"
+             }
+           },
+            */
+            //接下来我们跳到 Hyperf\Logger\ConfigProvider.php查看
             $providers = Composer::getMergedExtra('hyperf')['config'] ?? [];
             static::$providerConfigs = static::loadProviders($providers);
         }

@@ -42,16 +42,17 @@ class DefinitionSourceFactory
         $configDir = $this->baseUri . '/config';
 
         $configFromProviders = [];
+        //使用composer 提供的工具 ProviderConfig
         if (class_exists(ProviderConfig::class)) {
             $configFromProviders = ProviderConfig::load();
         }
-
+        //dependency
         $serverDependencies = $configFromProviders['dependencies'] ?? [];
         if (file_exists($configDir . '/autoload/dependencies.php')) {
             $definitions = include $configDir . '/autoload/dependencies.php';
             $serverDependencies = array_replace($serverDependencies, $definitions ?? []);
         }
-
+        //注册依赖
         return new DefinitionSource($serverDependencies);
     }
 }

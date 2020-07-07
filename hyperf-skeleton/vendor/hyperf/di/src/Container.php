@@ -51,6 +51,7 @@ class Container implements HyperfContainerInterface
         $this->definitionSource = $definitionSource;
         $this->definitionResolver = new ResolverDispatcher($this);
         // Auto-register the container.
+        //此属性存储容器对象
         $this->resolvedEntries = [
             self::class => $this,
             PsrContainerInterface::class => $this,

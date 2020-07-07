@@ -99,6 +99,7 @@ class ClassLoader
 
         unset($loader);
 
+        //重新加载自动注册
         // Re-register the loaders
         foreach ($loaders as $loader) {
             spl_autoload_register($loader);
