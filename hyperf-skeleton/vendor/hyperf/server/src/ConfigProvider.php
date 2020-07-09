@@ -31,6 +31,7 @@ class ConfigProvider
                 InitProcessTitleListener::class,
             ],
             'commands' => [
+                //服务启动命令行
                 StartServer::class,
             ],
             'annotations' => [

@@ -31,28 +31,41 @@ class StartServer extends Command
 
     public function __construct(ContainerInterface $container)
     {
+        //这里不用解释了，可以参考下hyperf命令行 通过构造函数传参定义
         $this->container = $container;
         parent::__construct('start');
         $this->setDescription('Start hyperf servers.');
     }
 
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return int
+     *
+     */
+    //execute()方法是Command实际执行的方法,\Symfony\Component\Console\Command\Command 作为基类采用这个方法,
+    // 而 \Hyperf\Command\Command 作为基类, 则是使用 handle() 方法
+    //转载出处:https://www.jianshu.com/p/0d1d89686ff9
+    //
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->checkEnvironment($output);
-
+       //通过获取ServerFactory对象来配置Event(事件模块)/Logger(日志模块)
         $serverFactory = $this->container->get(ServerFactory::class)
             ->setEventDispatcher($this->container->get(EventDispatcherInterface::class))
             ->setLogger($this->container->get(StdoutLoggerInterface::class));
-
+        //获取config/autoload/server.php server配置内容
         $serverConfig = $this->container->get(ConfigInterface::class)->get('server', []);
         if (! $serverConfig) {
             throw new InvalidArgumentException('At least one server should be defined.');
         }
 
         $serverFactory->configure($serverConfig);
-
+       //一键协程化
         Runtime::enableCoroutine(true, swoole_hook_flags());
 
+        //启动swoole
         $serverFactory->start();
 
         return 0;
