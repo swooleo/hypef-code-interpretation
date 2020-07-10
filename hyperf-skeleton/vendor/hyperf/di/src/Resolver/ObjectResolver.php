@@ -92,6 +92,17 @@ class ObjectResolver implements ResolverInterface
         $classReflection = null;
         try {
             $className = $definition->getClassName();
+           // var_dump($className);
+            //测试反射 不过这个反射真的很强大
+            if($className == 'Hyperf\HttpServer\Server'){
+                $classReflection = ReflectionManager::reflectClass($className);
+                $constructorInjection = $definition->getConstructorInjection();
+
+                $args = $this->parameterResolver->resolveParameters($constructorInjection, $classReflection->getConstructor(), $parameters);
+                foreach ($args as $arg){
+                    var_dump(get_class($arg));
+                }
+            }
             $classReflection = ReflectionManager::reflectClass($className);
             $constructorInjection = $definition->getConstructorInjection();
 
