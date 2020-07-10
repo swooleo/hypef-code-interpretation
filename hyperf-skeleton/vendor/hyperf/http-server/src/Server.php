@@ -82,6 +82,8 @@ class Server implements OnRequestInterface, MiddlewareInitializerInterface
 
     public function __construct(ContainerInterface $container, HttpDispatcher $dispatcher, ExceptionHandlerDispatcher $exceptionHandlerDispatcher, ResponseEmitter $responseEmitter)
     {
+//        $exception = new \Exception();
+//        var_dump($exception->getTraceAsString());exit;
         $this->container = $container;
         $this->dispatcher = $dispatcher;
         $this->exceptionHandlerDispatcher = $exceptionHandlerDispatcher;

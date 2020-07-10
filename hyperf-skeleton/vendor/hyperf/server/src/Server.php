@@ -195,22 +195,31 @@ class Server implements ServerInterface
                 continue;
             }
             if (is_array($callback)) {
+                //根据对应的server 注册对应的事件和实例化对应的对象
+                // 'callbacks' => [
+                //                SwooleEvent::ON_REQUEST => [Hyperf\HttpServer\Server::class, 'onRequest'],
+                //            ],
+               // $className Hyperf\HttpServer\Server
+               // $method onRequest
                 [$className, $method] = $callback;
                 if (array_key_exists($className . $method, $this->onRequestCallbacks)) {
                     $this->logger->warning(sprintf('%s will be replaced by %s. Each server should have its own onRequest callback. Please check your configs.', $this->onRequestCallbacks[$className . $method], $serverName));
                 }
 
                 $this->onRequestCallbacks[$className . $method] = $serverName;
+                //Hyperf\HttpServer\Server Hyperf\WebSocketServer\Server 在此被实例化.
                 $class = $this->container->get($className);
                 if (method_exists($class, 'setServerName')) {
                     // Override the server name.
                     $class->setServerName($serverName);
                 }
                 if ($class instanceof MiddlewareInitializerInterface) {
+                    //加载中间件
                     $class->initCoreMiddleware($serverName);
                 }
                 $callback = [$class, $method];
             }
+            //swoole的回调事件
             $server->on($event, $callback);
         }
     }
