@@ -91,7 +91,9 @@ class Server implements ServerInterface
     protected function initServers(ServerConfig $config)
     {
         $servers = $this->sortServers($config->getServers());
-
+        //如果配置多个server,需要先启动http/ws server，再通过addPort()的方式添加其余的server
+        //绑定server的callback函数
+        //触发 BeforeMainServerStart BeforeServerStart beforeStart
         foreach ($servers as $server) {
             $name = $server->getName();
             $type = $server->getType();
@@ -108,6 +110,8 @@ class Server implements ServerInterface
                 ServerManager::add($name, [$type, current($this->server->ports)]);
 
                 if (class_exists(BeforeMainServerStart::class)) {
+                    //这里会启动amqp,自定义process 大家可以搜索源码根据监听BeforeMainServerStart的事件，
+                    ## https://hyperf.wiki/2.0/#/zh-cn/event?id=hyperf-%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f%e4%ba%8b%e4%bb%b6
                     // Trigger BeforeMainServerStart event, this event only trigger once before main server start.
                     $this->eventDispatcher->dispatch(new BeforeMainServerStart($this->server, $config->toArray()));
                 }
