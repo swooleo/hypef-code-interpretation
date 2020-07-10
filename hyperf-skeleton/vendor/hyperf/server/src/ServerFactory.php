@@ -64,7 +64,12 @@ class ServerFactory
     public function getServer(): ServerInterface
     {
         if (! $this->server instanceof ServerInterface) {
+
+            /**
+             * @var  \Hyperf\Server\Server $serverName
+             */
             $serverName = $this->config->getType();
+            //注册logger,event事件管理器
             $this->server = new $serverName(
                 $this->container,
                 $this->getLogger(),

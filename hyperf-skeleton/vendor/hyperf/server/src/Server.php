@@ -84,6 +84,10 @@ class Server implements ServerInterface
         return $this->server;
     }
 
+    /**
+     * swoole配置，注册回调事件
+     * @param \Hyperf\Server\ServerConfig $config
+     */
     protected function initServers(ServerConfig $config)
     {
         $servers = $this->sortServers($config->getServers());

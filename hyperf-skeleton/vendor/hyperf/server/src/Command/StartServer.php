@@ -61,6 +61,7 @@ class StartServer extends Command
             throw new InvalidArgumentException('At least one server should be defined.');
         }
 
+        //实例化swoole,并注册回调事件
         $serverFactory->configure($serverConfig);
        //一键协程化
         Runtime::enableCoroutine(true, swoole_hook_flags());
